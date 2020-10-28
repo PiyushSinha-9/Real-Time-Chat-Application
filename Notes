@@ -44,9 +44,21 @@
     brew tap heroku/brew && brew install heroku (install heruko CLI)
 
 
+######################################  Deployment over Heruko and Netlify
 
+heroku login     
+git init     
+git add .
+git commit -m ""
+git push heruko master 
 
-
+Login in Netlify
+drag and drop client folder
+netlify login  
+netlify deploy -> new -> user-> no site name -> clrt + c <break>
+npm run build //to save changes
+netlify deploy -> ./build
+netlify deploy --prod   
 
 
 
