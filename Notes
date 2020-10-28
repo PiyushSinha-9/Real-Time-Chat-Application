@@ -1,0 +1,51 @@
+
+-> installing express socket.io moment
+        moment -> it is moment js used to format date and time
+-> install nodemon
+        package.json -> scripts -> add "start":'nodemon index.js'
+-> public -> index.html -> only thing in body is div with id named 'root', basically we want to
+     target that
+-> React router wasnt really necessary we could have used redux, just to simplify things
+-> Http request are slow compared to socket.io. user socket.io for real time only
+
+-> hooks, new addition in react, we can use life cycle methods, convert class based component to 
+    functional based components, heavy use in this projects
+
+-> I think life cycle in hooks is basically when user sign in and when leave, we have to initate
+    an function called cleanup
+
+-> in chat.js adding location in const app, we were able to fetch input from join.js
+
+-> ES6 - Syntax in used in chat.js to emit a socket
+
+
+
+//////////////////////////////////              TERMINAL COMMAND
+
+    npm install -g create-react-app
+    create-react-app ./   (inside client) 
+    npm init -y (inside server)
+    npm install --save cors nodemon socket.io express (inside server)
+    
+    npm install --save react-router socket.io-client react-scroll-to-bottom react-emoji 
+        query-string  (inside client)
+
+    npm install --save react-router-dom (client)
+    npm start
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
