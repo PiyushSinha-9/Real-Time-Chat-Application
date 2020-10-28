@@ -18,6 +18,12 @@
 
 -> ES6 - Syntax in used in chat.js to emit a socket
 
+-> users.js in server manage user sign in, signout, adding, etc.
+
+-> what socket.broadcast does it sends message to everyone besides that user.
+
+
+
 
 
 //////////////////////////////////              TERMINAL COMMAND
@@ -32,6 +38,7 @@
 
     npm install --save react-router-dom (client)
     npm start
+
 
 
 

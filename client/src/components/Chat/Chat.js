@@ -9,6 +9,8 @@ const Chat = ({location}) => {
 
     const [name, setName] = useState('');
     const [room, setRoom] = useState('');
+    const [message, setMessage] = useState('');
+    const [messages, setMessages] = useState([]);
     const ENDPOINT = 'localhost:5000';
 
     useEffect(() => {
@@ -29,12 +31,38 @@ const Chat = ({location}) => {
         }    // unmounting
     }, [ENDPOINT,location.search]);
 
+    useEffect(() => {
+        socket.on('message', message => {
+        setMessages(messages => [ ...messages, message ]);
+        });
+        
+        // socket.on("roomData", ({ users }) => {
+        // setUsers(users);
+        // });
+    }, [messages]);
 
+    // function for sending message
 
+    const sendMessage = (event) => {
+        event.preventDefault();
 
+        if(message) {
+            socket.emit('sendMessage', message, () => setMessage(''));
+        }
+    }
+
+    console.log(message,messages);
 
     return (
-        <h1>chat</h1>
+        <div className="outerContainer">
+        <div className="container">
+            <input 
+                value ={message}
+                onChange={(event) => setMessage(event.target.value)}
+                onKeyPress={event => event.key === 'Enter' ? sendMessage(event) : null}
+            />
+        </div>
+      </div> 
     )
 }
 
@@ -94,14 +122,14 @@ export default Chat;
 //   }
 
 //   return (
-//     <div className="outerContainer">
-//       <div className="container">
-//           <InfoBar room={room} />
-//           <Messages messages={messages} name={name} />
-//           <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
-//       </div>
-//       <TextContainer users={users}/>
-//     </div>
+    // <div className="outerContainer">
+    //   <div className="container">
+    //       <InfoBar room={room} />
+    //       <Messages messages={messages} name={name} />
+    //       <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+    //   </div>
+    //   <TextContainer users={users}/>
+    // </div>
 //   );
 // }
 
