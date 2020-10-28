@@ -41,6 +41,8 @@
     npm install --save react-router-dom (client)
     npm start
 
+    brew tap heroku/brew && brew install heroku (install heruko CLI)
+
 
 
 

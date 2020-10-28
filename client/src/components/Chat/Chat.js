@@ -2,146 +2,152 @@ import React, { useState, useEffect } from "react";
 import queryString from 'query-string';
 import io from "socket.io-client";
 
+import TextContainer from '../TextContainer/TextContainer';
+import Messages from '../Messages/Messages';
+import InfoBar from '../InfoBar/InfoBar';
+import Input from '../Input/Input';
+
 import './Chat.css';
 
-import InfoBar from '../InfoBar/InfoBar';
+const ENDPOINT = 'https://real-time-chat-app-piyush.herokuapp.com/';
+
 let socket;
 
+const Chat = ({ location }) => {
+  const [name, setName] = useState('');
+  const [room, setRoom] = useState('');
+  const [users, setUsers] = useState('');
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState([]);
 
-const Chat = ({location}) => {
+  useEffect(() => {
+    const { name, room } = queryString.parse(location.search);
 
-    const [name, setName] = useState('');
-    const [room, setRoom] = useState('');
-    const [message, setMessage] = useState('');
-    const [messages, setMessages] = useState([]);
-    const ENDPOINT = 'localhost:5000';
+    socket = io(ENDPOINT);
 
-    useEffect(() => {
-        const {name, room}=queryString.parse(location.search);
-        
-        socket = io(ENDPOINT);
+    setRoom(room);
+    setName(name)
 
-        setName(name);
-        setRoom(room);
+    socket.emit('join', { name, room }, (error) => {
+      if(error) {
+        alert(error);
+      }
+    });
+  }, [ENDPOINT, location.search]);
+  
+  useEffect(() => {
+    socket.on('message', message => {
+      setMessages(messages => [ ...messages, message ]);
+    });
+    
+    socket.on("roomData", ({ users }) => {
+      setUsers(users);
+    });
+}, []);
 
-        socket.emit('join', {name,room}, ( ) => {
-            // later for error handling 
-        } );
-   
-        return () =>{
-            socket.emit('disconnect');
-            socket.off();
-        }    // unmounting
-    }, [ENDPOINT,location.search]);
+  const sendMessage = (event) => {
+    event.preventDefault();
 
-    useEffect(() => {
-        socket.on('message', message => {
-        setMessages(messages => [ ...messages, message ]);
-        });
-        
-        // socket.on("roomData", ({ users }) => {
-        // setUsers(users);
-        // });
-    }, [messages]);
-
-    // function for sending message
-
-    const sendMessage = (event) => {
-        event.preventDefault();
-        
-        if(message) {
-            socket.emit('sendMessage', message, () => setMessage(''));
-        }
+    if(message) {
+      socket.emit('sendMessage', message, () => setMessage(''));
     }
+  }
 
-    console.log(message,messages);
-
-    return (
-        <div className="outerContainer">
-        <div className="container">
-            
-            <InfoBar room={room} />
-            {/* <Messages messages={messages} name={name} />
-            <Input message={message} setMessage={setMessage} sendMessage={sendMessage} /> */}
-            
-            
-            {/* <input 
-                value ={message}
-                onChange={(event) => setMessage(event.target.value)}
-                onKeyPress={event => event.key === 'Enter' ? sendMessage(event) : null}
-            /> */}
-
-
-        </div>
-      </div> 
-    )
+  return (
+    <div className="outerContainer">
+      <div className="container">
+          <InfoBar room={room} />
+          <Messages messages={messages} name={name} />
+          <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+      </div>
+      <TextContainer users={users}/>
+    </div>
+  );
 }
 
 export default Chat;
 
 
 
-// import TextContainer from '../TextContainer/TextContainer';
-// import Messages from '../Messages/Messages';
-// import InfoBar from '../InfoBar/InfoBar';
-// import Input from '../Input/Input';
+// import React, { useState, useEffect } from "react";
+// import queryString from 'query-string';
+// import io from "socket.io-client";
 
 // import './Chat.css';
 
-// const ENDPOINT = 'https://project-chat-application.herokuapp.com/';
-
+// import Input from '../Input/Input';
+// import InfoBar from '../InfoBar/InfoBar';
+// import Messages from '../Messages/Messages';
 // let socket;
 
-// const Chat = ({ location }) => {
-//   const [name, setName] = useState('');
-//   const [room, setRoom] = useState('');
-//   const [users, setUsers] = useState('');
-//   const [message, setMessage] = useState('');
-//   const [messages, setMessages] = useState([]);
 
-//   useEffect(() => {
-//     const { name, room } = queryString.parse(location.search);
+// const Chat = ({location}) => {
 
-//     socket = io(ENDPOINT);
+//     const [name, setName] = useState('');
+//     const [room, setRoom] = useState('');
+//     const [message, setMessage] = useState('');
+//     const [messages, setMessages] = useState([]);
+//     const ENDPOINT = 'localhost:5000';
 
-//     setRoom(room);
-//     setName(name)
+//     useEffect(() => {
+//         const {name, room}=queryString.parse(location.search);
+        
+//         socket = io(ENDPOINT);
 
-//     socket.emit('join', { name, room }, (error) => {
-//       if(error) {
-//         alert(error);
-//       }
-//     });
-//   }, [ENDPOINT, location.search]);
-  
-//   useEffect(() => {
-//     socket.on('message', message => {
-//       setMessages(messages => [ ...messages, message ]);
-//     });
-    
-//     socket.on("roomData", ({ users }) => {
-//       setUsers(users);
-//     });
-// }, []);
+//         setName(name);
+//         setRoom(room);
 
-//   const sendMessage = (event) => {
-//     event.preventDefault();
+//         socket.emit('join', {name,room}, ( ) => {
+//             // later for error handling 
+//         } );
+   
+//         return () =>{
+//             socket.emit('disconnect');
+//             socket.off();
+//         }    // unmounting
+//     }, [ENDPOINT,location.search]);
 
-//     if(message) {
-//       socket.emit('sendMessage', message, () => setMessage(''));
+//     useEffect(() => {
+//         socket.on('message', message => {
+//         setMessages(messages => [ ...messages, message ]);
+//         });
+        
+//         // socket.on("roomData", ({ users }) => {
+//         // setUsers(users);
+//         // });
+//     }, [messages]);
+
+//     // function for sending message
+
+//     const sendMessage = (event) => {
+//         event.preventDefault();
+        
+//         if(message) {
+//             socket.emit('sendMessage', message, () => setMessage(''));
+//         }
 //     }
-//   }
 
-//   return (
-    // <div className="outerContainer">
-    //   <div className="container">
-        //   <InfoBar room={room} />
-        //   <Messages messages={messages} name={name} />
-        //   <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
-    //   </div>
-    //   <TextContainer users={users}/>
-    // </div>
-//   );
+//     console.log(message,messages);
+
+//     return (
+//         <div className="outerContainer">
+//         <div className="container">
+            
+//             <InfoBar room={room} />
+//             <Messages messages={messages} name={name} />
+//             <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+            
+            
+//             {/* <input 
+//                 value ={message}
+//                 onChange={(event) => setMessage(event.target.value)}
+//                 onKeyPress={event => event.key === 'Enter' ? sendMessage(event) : null}
+//             /> */}
+
+
+//         </div>
+//       </div> 
+//     )
 // }
 
 // export default Chat;
