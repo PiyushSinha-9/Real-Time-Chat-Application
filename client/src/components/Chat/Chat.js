@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import queryString from 'query-string';
 import io from "socket.io-client";
 
+import './Chat.css';
 
+import InfoBar from '../InfoBar/InfoBar';
 let socket;
+
 
 const Chat = ({location}) => {
 
@@ -19,7 +22,7 @@ const Chat = ({location}) => {
         socket = io(ENDPOINT);
 
         setName(name);
-        setName(room);
+        setRoom(room);
 
         socket.emit('join', {name,room}, ( ) => {
             // later for error handling 
@@ -45,7 +48,7 @@ const Chat = ({location}) => {
 
     const sendMessage = (event) => {
         event.preventDefault();
-
+        
         if(message) {
             socket.emit('sendMessage', message, () => setMessage(''));
         }
@@ -56,11 +59,19 @@ const Chat = ({location}) => {
     return (
         <div className="outerContainer">
         <div className="container">
-            <input 
+            
+            <InfoBar room={room} />
+            {/* <Messages messages={messages} name={name} />
+            <Input message={message} setMessage={setMessage} sendMessage={sendMessage} /> */}
+            
+            
+            {/* <input 
                 value ={message}
                 onChange={(event) => setMessage(event.target.value)}
                 onKeyPress={event => event.key === 'Enter' ? sendMessage(event) : null}
-            />
+            /> */}
+
+
         </div>
       </div> 
     )
@@ -124,9 +135,9 @@ export default Chat;
 //   return (
     // <div className="outerContainer">
     //   <div className="container">
-    //       <InfoBar room={room} />
-    //       <Messages messages={messages} name={name} />
-    //       <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+        //   <InfoBar room={room} />
+        //   <Messages messages={messages} name={name} />
+        //   <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
     //   </div>
     //   <TextContainer users={users}/>
     // </div>
