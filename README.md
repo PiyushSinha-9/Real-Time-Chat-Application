@@ -1,6 +1,6 @@
 # REAL TIME CHAT APPLICATION
 
-![Code Quality Score](sentences = MySentences('D:\sentences')
+![Code Quality Score](https://www.code-inspector.com/project/15411/score/svg)
 
 I created it using Node, Express, Socket.io and React. Deployed it over Netlify. Checks Notes for more info.
 
